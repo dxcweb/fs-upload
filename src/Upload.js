@@ -18,7 +18,14 @@ class Upload extends Component {
     };
 
     componentDidMount() {
-        const {paste,drop}=this.props;
+        const {paste,drop,domain}=this.props;
+        let dom = null;
+        if (domain == 'document') {
+            dom = document;
+        } else {
+            dom = this.refs.self;
+        }
+
         if (drop) {
             this.stopBrowserAction = (e)=> {
                 e.stopPropagation();
@@ -26,27 +33,37 @@ class Upload extends Component {
             };
             //阻止浏览器默行为。
             document.addEventListener('dragover', this.stopBrowserAction);
+            document.addEventListener('drop', this.stopBrowserAction);
             this.dropEvent = (e)=> {
                 e.stopPropagation();
                 e.preventDefault();
                 this.drop(e);
             };
             //添加拖拽事件
-            document.addEventListener('drop', this.dropEvent);
+            dom.addEventListener('drop', this.dropEvent);
         }
         if (paste) {
             this.pasteEvent = (e)=> {
                 this.paste(e);
             };
-            document.addEventListener('paste', this.pasteEvent);
+            dom.addEventListener('paste', this.pasteEvent);
         }
     }
 
     //组件移除前调用。
     componentWillUnmount() {
+        const {paste,drop,domain}=this.props;
+        let dom = null;
+        if (domain == 'document') {
+            dom = document;
+        } else {
+            dom = this.refs.self;
+        }
         document.removeEventListener('dragover', this.stopBrowserAction);
-        document.removeEventListener('drop', this.dropEvent);
-        document.removeEventListener('paste', this.pasteEvent);
+        document.removeEventListener('drop', this.stopBrowserAction);
+        dom.removeEventListener('drop', this.dropEvent);
+        dom.removeEventListener('paste', this.pasteEvent);
+
     }
 
     //过滤
@@ -125,7 +142,7 @@ class Upload extends Component {
     render() {
         const {children,onClick,paste,drop,domain,allow,onError,onChange,...other}=this.props;
         return (
-            <div {...other} onClick={this.onClick.bind(this)}>
+            <div {...other} onClick={this.onClick.bind(this)} ref="self">
                 <input onChange={this.onInputChange.bind(this)} type="file" ref="inputFile" style={{display:'none'}}/>
                 {children}
             </div>

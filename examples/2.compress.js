@@ -4,7 +4,7 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import Upload from 'fs-upload'
-class Simple extends Component {
+class Compress extends Component {
     state = {
         originalSize: [],
         compressSize: [],
@@ -51,6 +51,6 @@ class Simple extends Component {
     }
 }
 ReactDOM.render(
-    <Simple />,
+    <Compress />,
     document.getElementById('__react-content')
 );

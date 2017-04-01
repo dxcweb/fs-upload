@@ -9,14 +9,16 @@ const filesToDataURL = (files)=> {
     if (files instanceof Array) {
         return new Promise((resolve, reject)=> {
             const dataURL = [];
+            let i = 0;
             const handle = ()=> {
-                if (files.length == 0) {
+                if (files.length == i) {
                     resolve(dataURL);
                     return false;
                 }
-                const file = files.pop();
+                const file = files[i];
                 fileToDataURL(file).then((res)=> {
                     dataURL.push(res);
+                    i++;
                     handle();
                 });
             };
@@ -38,7 +40,6 @@ const fileToDataURL = (file)=> {
 };
 const canvasCompress = (file, ratio)=> {
     return new Promise((resolve, reject)=> {
-        const originalSize = file.size;
         fileToDataURL(file).then((res)=> {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
@@ -69,14 +70,16 @@ const compressImage = (files, ratio = 0.9)=> {
     if (files instanceof Array) {
         return new Promise((resolve, reject)=> {
             const blobs = [];
+            let i = 0;
             const handle = ()=> {
-                if (files.length == 0) {
+                if (files.length == i) {
                     resolve(blobs);
                     return false;
                 }
-                const file = files.pop();
+                const file = files[i];
                 canvasCompress(file, ratio).then((blob)=> {
                     blobs.push(blob);
+                    i++;
                     handle();
                 });
             };
