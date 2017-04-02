@@ -1,6 +1,6 @@
 {
   "name": "fs-upload",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "react版本aler函数,直接调用aler(title, content, button)显示",
   "keywords": [
     "upload",
