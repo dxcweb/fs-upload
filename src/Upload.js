@@ -10,7 +10,7 @@ class Upload extends Component {
         paste: true,//是否支持粘贴
         drop: true,//是否支持拖拽
         domain: 'document',//域 document或者self 指drop或paste在什么域上
-        allow: "image",//允许上传文件格式 比如:image或者image|zip
+        allow: "png|jpg|jpge",//允许上传文件格式 比如:image或者image|zip
         onError: (msg, type)=> {
         },
         onChange: ()=> {
@@ -68,14 +68,22 @@ class Upload extends Component {
 
     //过滤
     filter(file) {
-        const {allow}=this.props;
-        if (!/image\/\w+/.test(file.type)) {
-            console.log('文件必须为图片！');
+        const {allow,onError}=this.props;
+        //if (!/image\/\w+/.test(file.type)) {
+        //    console.log('文件必须为图片！');
+        //    return false;
+        //}
+        const index = file.name.indexOf('.');
+        if (index < 0) {
+            console.log('文件后缀是不允许的!');
+            onError("文件后缀是不允许的!");
             return false;
         }
+        const ext = file.name.substr(index + 1);
         var reg = new RegExp(`(.*)(${allow})+(.*)`);
-        if (!reg.test(file.type)) {
-            console.log('文件类型为: ' + file.type + '不在' + allow + '允许范围内')
+        if (!reg.test(ext)) {
+            console.log('文件后缀是不允许的!');
+            onError("文件后缀是不允许的!");
             return false;
         }
         return true;
@@ -136,6 +144,7 @@ class Upload extends Component {
             onError('文件类型错误!');
             return false;
         }
+        this.refs.inputFile.value = '';
         onChange(files);
     }
 
