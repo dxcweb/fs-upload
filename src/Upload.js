@@ -79,7 +79,7 @@ class Upload extends Component {
             onError("文件后缀是不允许的!");
             return false;
         }
-        const ext = file.name.substr(index + 1);
+        const ext = file.name.substr(index + 1).toLowerCase();
         var reg = new RegExp(`(.*)(${allow})+(.*)`);
         if (!reg.test(ext)) {
             console.log('文件后缀是不允许的!');
